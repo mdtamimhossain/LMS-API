@@ -25,5 +25,11 @@ Route::get('/test', function () {
     ]);
 });
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::POST('/login', [AuthController::class, 'login']);
+Route::prefix('/v1')->group(function (){
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::POST('/login', [AuthController::class, 'login']);
+});
+
+require ('routes/api/admin.php');
+require ('routes/api/teacher.php');
+require ('routes/api/student.php');

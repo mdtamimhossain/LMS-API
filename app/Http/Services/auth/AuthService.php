@@ -50,6 +50,7 @@ class AuthService extends Service
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'verification_code' => $code,
+                'userRole'=>$data['userRole'],
                 'password' => Hash::make($data['password']),
             ];
             $user = User::create($formattedData);
