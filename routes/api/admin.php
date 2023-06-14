@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\CategoryController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('/v1')->group(function (){
     Route::post('/addCategory', [CategoryController::class, 'addCategory']);
