@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('degree');
             $table->string('university');
             $table->string('photo');
+            $table->boolean('isApproved')->default(false);
             $table->string('cv');
             $table->string('video_resume');
             $table->timestamps();

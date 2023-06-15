@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\ApplicationController;
 use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\admin\CourseController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/v1')->group(function (){
@@ -12,6 +13,6 @@ Route::prefix('/v1')->group(function (){
     Route::post('/deleteCategory/{id}', [CategoryController::class, 'deleteCategory']);
     Route::get('/getApplications', [ApplicationController::class, 'getApplications']);
     Route::get('/getApplication/{id}', [ApplicationController::class, 'getApplication']);
-    Route::get('/getCourses', [CategoryController::class, 'getCourses']);
-    Route::get('/getCourse/{id}', [CategoryController::class, 'getCourse']);
+    Route::get('/getCourses', [CourseController::class, 'getCourses']);
+    Route::get('/getCourse/{id}', [CourseController::class, 'getCourse']);
 });
