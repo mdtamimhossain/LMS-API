@@ -4,6 +4,7 @@ namespace App\Http\Services\teacher;
 
 use App\Http\Services\Service;
 use App\Models\Category;
+use App\Models\Course;
 use App\Models\Teacher;
 
 use App\Models\User;
@@ -46,15 +47,17 @@ class teacherService extends Service
             return $this->responseError($exception->getMessage());
         }
     }
-    public function allCategory(): array
+    public function addCourse(array $data): array
     {
         try{
-            $data=Category::all();
-            if($data->count()==0)
-            {
-                return $this->responseError('No category available');
-            }
-            return $this->responseSuccess('all Category',['data'=>$data]);
+            Course::create([
+               'course_name'=>$data['course_name'],
+               'category_id'=>$data['category_id'],
+               'user_id'=>$data['user_id'],
+               'description'=>$data['description'],
+                'slug'=>strtolower(str_replace(' ','-',$data['course_name'])),
+            ]);
+            return $this->responseSuccess('New Course Submitted For review successfully');
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());

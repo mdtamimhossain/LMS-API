@@ -8,6 +8,7 @@ use App\Http\Requests\admin\editCategoryRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegistrationRequest;
 use App\Http\Requests\Auth\VerificationRequest;
+use App\Http\Requests\teacher\courseRequest;
 use App\Http\Requests\teacher\teacherRequest;
 use App\Http\Services\admin\CategoryService;
 use App\Http\Services\auth\AuthService;
@@ -33,10 +34,10 @@ class teacherController extends Controller
         return response()->json($this->service->apply($request->all()));
 
     }
-    public function allCategory (): JsonResponse
+    public function addCourse (courseRequest $request): JsonResponse
     {
 
-        return response()->json($this->service->allCategory());
+        return response()->json($this->service->addCourse($request->all()));
 
     }
    public function editCategory ($id): JsonResponse

@@ -55,4 +55,5 @@ class CategoryController extends Controller
         return response()->json($this->service->deleteCategory($id));
 
     }
+
 }
