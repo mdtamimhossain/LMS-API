@@ -9,5 +9,5 @@ Route::prefix('/v1/teacher')->group(function (){
 });
 //if the user is teacher
 Route::prefix('/v1/teacher')->group(function (){
-    Route::post('/addCourse', [teacherController::class, 'addCourse']);
+    Route::post('/add-course', [teacherController::class, 'addCourse']);
 });
