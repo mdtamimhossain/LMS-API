@@ -4,9 +4,11 @@ namespace App\Http\Services\auth;
 
 use App\Http\Services\Service;
 use App\Jobs\SendEmails;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthService extends Service
 {
@@ -45,17 +47,16 @@ class AuthService extends Service
     public function processRegistration (array $data): array
     {
         try {
-            $code = 'randomNumber(4)';
+            $code = randomNumber(4);
             $formattedData = [
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'verification_code' => $code,
-                'userRole'=>$data['userRole'],
                 'password' => Hash::make($data['password']),
             ];
             $user = User::create($formattedData);
-           // $sendEmailJob = new SendEmailJob($user->email, $user->name, $code);
-            //dispatch($sendEmailJob);
+            $sendEmailJob = new SendEmails($user->email, $user->name, $code);
+            dispatch($sendEmailJob);
             return $this->responseSuccess("Registration Successful! Please check email for code");
         }
         catch (\Exception $exception) {
@@ -63,6 +64,37 @@ class AuthService extends Service
         }
     }
 
+    public function teacherRegistration (array $data): array
+    {
+        try {
+
+            $code = randomNumber(4);
+
+            $imagePath = $data['photo']->store('public/teacher_photo');
+            $videoPath = $data['video_resume']->store('public/videos');
+            $cvPath = $data['cv']->store('public/cv');
+
+
+            Teacher::create([
+                'name'=>$data['name'],
+                'email'=>$data['email'],
+                'number'=>$data['number'],
+                'degree'=>$data['degree'],
+                'university'=>$data['university'],
+                'video_resume'=>$videoPath,
+                'photo'=>$imagePath,
+                'cv'=>$cvPath,
+                'verification_code' => $code,
+                'password' => Hash::make($data['password']),
+            ]);
+            $sendEmailJob = new SendEmails($data['mail'],$data['name'], $code);
+            dispatch($sendEmailJob);
+            return $this->responseSuccess("Registration Successful! Please check email for code");
+        }
+        catch (\Exception $exception) {
+            return $this->responseError($exception->getMessage());
+        }
+    }
     /**
      * @param array $data
      * @return array
@@ -79,6 +111,25 @@ class AuthService extends Service
                 'email_verified' => true
             ];
             User::where('id', $user->id)->update($formattedData);
+            return $this->responseSuccess( "Verification Successful!");
+        }
+        catch (\Exception $exception) {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function teacherVerification (array $data): array
+    {
+        try {
+            $teacher = Teacher::where('email', $data['email'])->where('verification_code', $data['code'])->first();
+            if (!$teacher) {
+                return $this->responseError("Invalid Code");
+            }
+            $formattedData = [
+                'verification_code' => null,
+                'email_verified' => true,
+                'userRole'=>'teacher'
+            ];
+            User::where('id', $teacher->id)->update($formattedData);
             return $this->responseSuccess( "Verification Successful!");
         }
         catch (\Exception $exception) {

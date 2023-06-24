@@ -25,9 +25,15 @@ Route::get('/test', function () {
     ]);
 });
 
-Route::prefix('/v1')->group(function (){
+Route::prefix('/v1/user')->group(function (){
     Route::post('/register', [AuthController::class, 'register']);
     Route::POST('/login', [AuthController::class, 'login']);
+    Route::POST('/verification', [AuthController::class, 'verification']);
+});
+Route::prefix('/v1/teacher')->group(function (){
+    Route::post('/register', [AuthController::class, 'teacherRegister']);
+    Route::POST('/login', [AuthController::class, 'teacherLogin']);
+    Route::POST('/verification', [AuthController::class, 'teacherVerification']);
 });
 
 require ('routes/api/admin.php');

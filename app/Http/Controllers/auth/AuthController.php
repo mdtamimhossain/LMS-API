@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegistrationRequest;
 use App\Http\Requests\Auth\VerificationRequest;
+use App\Http\Requests\teacher\teacherRegistrationRequest;
 use App\Http\Services\auth\AuthService;
 use Illuminate\Http\JsonResponse;
 use function App\Http\Controllers\randomNumber;
@@ -28,6 +29,12 @@ class AuthController extends Controller
         return response()->json($this->service->processLogin($request->all()));
 
     }
+    public function teacherLogin (LoginRequest $request): JsonResponse
+    {
+
+        return response()->json($this->service->teacherLogin($request->all()));
+
+    }
 
     /**
      * @param RegistrationRequest $request
@@ -37,6 +44,25 @@ class AuthController extends Controller
     {
 
         return response()->json($this->service->processRegistration($request->all()));
+
+    }
+    public function verification (RegistrationRequest $request): JsonResponse
+    {
+
+        return response()->json($this->service->processVerification($request->all()));
+
+    }
+
+    public function teacherRegister (teacherRegistrationRequest $request): JsonResponse
+    {
+
+        return response()->json($this->service->teacherRegistration($request->all()));
+
+    }
+    public function teacherVerification (RegistrationRequest $request): JsonResponse
+    {
+
+        return response()->json($this->service->teacherVerification($request->all()));
 
     }
 

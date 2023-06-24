@@ -16,9 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('number');
+            $table->string('verification_code')->nullable();
+            $table->boolean('email_verified')->default(false);
             $table->string('degree');
             $table->string('university');
             $table->string('photo');
+            $table->string('userRole')->nullable();
             $table->boolean('isApproved')->default(false);
             $table->string('cv');
             $table->string('video_resume');

@@ -12,6 +12,7 @@ class Teacher extends Model
         'name',
         'email',
         'number',
+        'email_verified',
         'degree',
         'university',
         'photo',

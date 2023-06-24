@@ -9,7 +9,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegistrationRequest;
 use App\Http\Requests\Auth\VerificationRequest;
 use App\Http\Requests\teacher\courseRequest;
-use App\Http\Requests\teacher\teacherRequest;
+use App\Http\Requests\teacher\teacherRegistrationRequest;
 use App\Http\Services\admin\CategoryService;
 use App\Http\Services\auth\AuthService;
 use App\Http\Services\teacher\teacherService;
@@ -25,10 +25,10 @@ class teacherController extends Controller
     }
 
     /**
-     * @param teacherRequest $request
+     * @param teacherRegistrationRequest $request
      * @return JsonResponse
      */
-    public function apply (teacherRequest $request): JsonResponse
+    public function apply (teacherRegistrationRequest $request): JsonResponse
     {
 
         return response()->json($this->service->apply($request->all()));
