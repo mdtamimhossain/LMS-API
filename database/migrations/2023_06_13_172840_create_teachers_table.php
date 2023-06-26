@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('number');
+            $table->string('password');
             $table->string('verification_code')->nullable();
             $table->boolean('email_verified')->default(false);
             $table->string('degree');

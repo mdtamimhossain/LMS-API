@@ -34,16 +34,16 @@ class SendEmails implements ShouldQueue
      * Execute the job.
      *
      * @return void
-     */
-    public function handle()
-    {
-        $email = $this->email;
-        $name = $this->name;
-        $data['appName'] = 'Learning Management System';
-        $data['code'] = $this->code;
-        Mail::send('emails.email_verification', $data, function ($message) use ($email, $name) {
-            $message->from('lms@gmail.com', 'lms');
-            $message->to($email, $name)->subject('Verification Code');
-        });
-    }
+     */public function handle()
+{
+    $email = $this->email;
+    $name = $this->name;
+    $subject = 'Verification Code';
+    $content = "Hello $name, your verification code is: " . $this->code;
+
+    Mail::raw($content, function ($message) use ($email, $name, $subject) {
+        $message->from('lms@gmail.com', 'lms');
+        $message->to($email, $name)->subject($subject);
+    });
+}
 }

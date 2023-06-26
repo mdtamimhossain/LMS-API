@@ -29,11 +29,13 @@ Route::prefix('/v1/user')->group(function (){
     Route::post('/register', [AuthController::class, 'register']);
     Route::POST('/login', [AuthController::class, 'login']);
     Route::POST('/verification', [AuthController::class, 'verification']);
+    Route::get('/logout', [AuthController::class, 'logout']);
 });
 Route::prefix('/v1/teacher')->group(function (){
     Route::post('/register', [AuthController::class, 'teacherRegister']);
     Route::POST('/login', [AuthController::class, 'teacherLogin']);
     Route::POST('/verification', [AuthController::class, 'teacherVerification']);
+    Route::get('/logout', [AuthController::class, 'teacherLogout']);
 });
 
 require ('routes/api/admin.php');

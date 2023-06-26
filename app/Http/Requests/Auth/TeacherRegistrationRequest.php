@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\teacher;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class teacherRegistrationRequest extends FormRequest
+class TeacherRegistrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +31,7 @@ class teacherRegistrationRequest extends FormRequest
             'number' => 'required',
             'degree' => 'required',
             'university' => 'required',
-            'video_resume' => 'required|mimetypes:video/mp4|max:2048',
+            'video_resume' => 'required|mimetypes:video/mp4',
             'photo' => 'required|image|max:2048',
             'cv' => 'required|mimes:pdf,ppt,doc,docx|max:2048',
 

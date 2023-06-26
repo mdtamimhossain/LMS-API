@@ -19,9 +19,29 @@ class AuthService extends Service
     public function processLogin (array $data): array
     {
         try {
-            $mail=$data['email'];
-            $lenght=strlen($mail);
             $user = User::where('email', $data['email'])->first();
+            if (!$user) {
+
+                return $this->responseError('Email Not Found');
+            }
+            if (!Hash::check($data['password'], $user->password)) {
+                return $this->responseError("Wrong Email Or Password");
+            }
+            $authorization=[
+                'token' =>  $user->createToken($user->email)->accessToken,
+                'token_type' =>  'Bearer'
+            ];
+            return $this->responseSuccess("Login Successful!",['authorization'=>$authorization]);
+        }
+        catch (\Exception $exception) {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function teacherLogin (array $data): array
+    {
+        try {
+            $user = Teacher::where('email', $data['email'])->first();
+
             if (!$user) {
 
                 return $this->responseError('Email Not Found');
@@ -69,13 +89,12 @@ class AuthService extends Service
         try {
 
             $code = randomNumber(4);
-
             $imagePath = $data['photo']->store('public/teacher_photo');
             $videoPath = $data['video_resume']->store('public/videos');
             $cvPath = $data['cv']->store('public/cv');
 
 
-            Teacher::create([
+            $formattedData =[
                 'name'=>$data['name'],
                 'email'=>$data['email'],
                 'number'=>$data['number'],
@@ -84,10 +103,11 @@ class AuthService extends Service
                 'video_resume'=>$videoPath,
                 'photo'=>$imagePath,
                 'cv'=>$cvPath,
-                'verification_code' => $code,
+                'verification_code'=>$code,
                 'password' => Hash::make($data['password']),
-            ]);
-            $sendEmailJob = new SendEmails($data['mail'],$data['name'], $code);
+            ];
+            $user=Teacher::create($formattedData);
+            $sendEmailJob = new SendEmails($data['email'],$data['name'],$user->verification_code);
             dispatch($sendEmailJob);
             return $this->responseSuccess("Registration Successful! Please check email for code");
         }
@@ -129,7 +149,7 @@ class AuthService extends Service
                 'email_verified' => true,
                 'userRole'=>'teacher'
             ];
-            User::where('id', $teacher->id)->update($formattedData);
+            Teacher::where('id', $teacher->id)->update($formattedData);
             return $this->responseSuccess( "Verification Successful!");
         }
         catch (\Exception $exception) {
@@ -143,6 +163,19 @@ class AuthService extends Service
                 return $this->responseError(`User Doesn't Exit`);
             }
             Auth::logout();
+            return $this->responseSuccess( "Logout Successful!");
+        }catch (\Exception $exception){
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function teacherLogout(){
+        try{
+            $user=Teacher::where('user_id',Auth::id());
+            if(!$user){
+                return $this->responseError(`User Doesn't Exit`);
+            }
+            Auth::logout();
+            return $this->responseSuccess( "Logout Successful!");
         }catch (\Exception $exception){
             return $this->responseError($exception->getMessage());
         }
