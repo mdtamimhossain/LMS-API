@@ -17,7 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->integer('user_id');
             $table->string('description');
-            $table->boolean('isApproved')->default(false);
+            $table->integer('video_count')->default(0);
+            $table->string('thumbnail');
             $table->string('slug');
             $table->timestamps();
             $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('cascade');

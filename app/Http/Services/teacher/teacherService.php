@@ -8,6 +8,8 @@ use App\Models\Course;
 use App\Models\Teacher;
 
 use App\Models\User;
+use App\Models\Video;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class teacherService extends Service
@@ -16,57 +18,39 @@ class teacherService extends Service
      * @param array $data
      * @return array
      */
-    public function apply(array $data): array
-    {
-        try {
-            $user=User::where('email',$data['email'])->get();
-            if(!$user)
-            {
-                return $this->responseError("You need to create an account with this email first");
-            }
-            $imagePath = $data['photo']->store('public/teacher_photo');
-            $videoPath = $data['video_resume']->store('public/videos');
-            $cvPath = $data['cv']->store('public/cv');
-            $imageUrl = Storage::url($imagePath);
-            $videoUrl = Storage::url($videoPath);
-            $cvUrl = Storage::url($cvPath);
-            Teacher::create([
-                'name'=>$data['name'],
-                'email'=>$data['email'],
-                'number'=>$data['number'],
-                'degree'=>$data['degree'],
-                'university'=>$data['university'],
-                'video_resume'=>$data['video_resume'],
-                'photo'=>$data['photo'],
-                'cv'=>$data['cv'],
-            ]);
 
-            return $this->responseSuccess("You application submitted successfully");
-        }
-        catch (\Exception $exception) {
-            return $this->responseError($exception->getMessage());
-        }
-    }
     public function addCourse(array $data): array
     {
         try{
+            $imagePath = $data['thumbnail']->store('public/thumbnail');
             Course::create([
                'course_name'=>$data['course_name'],
                'category_id'=>$data['category_id'],
                'user_id'=>$data['user_id'],
                'description'=>$data['description'],
+                'thumbnail'=>$imagePath,
                 'slug'=>strtolower(str_replace(' ','-',$data['course_name'])),
             ]);
-            return $this->responseSuccess('New Course Submitted For review successfully');
+            return $this->responseSuccess('New Course Added  successfully');
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());
         }
     }
-    public function editCategory($id): array
+    public function addVideo(array $data): array
     {
         try{
-            $data=Category::find($id);
+            $course=Course::where('user_id',Auth::id())->where('id',$data['course_id'])->get();
+            dd(Auth::user());
+            if(!$course){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $videoPath = $data['video']->store(`public/"$course->name"/video`);
+            Video::create([
+                'course_id'=>$data['course_id'],
+                'title'=>$data['title'],
+                'video'=>$videoPath
+            ]);
             return $this->responseSuccess('edit Category page ',['data'=>$data]);
         }catch (\Exception $exception)
         {
@@ -88,16 +72,7 @@ class teacherService extends Service
             return $this->responseError($exception->getMessage());
         }
     }
-    public function deleteCategory($id): array
-    {
-        try{
-            $category=Category::find($id);
-            $category->delete();
-            return $this->responseSuccess('Category deleted successfully');
-        }catch (\Exception $exception)
-        {
-            return $this->responseError($exception->getMessage());
-        }
-    }
+
+
 
 }

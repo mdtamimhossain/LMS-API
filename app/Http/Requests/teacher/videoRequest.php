@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\admin;
+namespace App\Http\Requests\teacher;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddCategoryRequest extends FormRequest
+class videoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,9 @@ class AddCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:categories',
-            "description"=>'required'
+            'course_id' => 'required',
+            'title' => 'required',
+            'video' => 'required|mimetypes:video/mp4',
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Services\admin;
 
 use App\Http\Services\Service;
+use App\Jobs\ApplicationEmails;
 use App\Jobs\SendEmails;
 use App\Models\Category;
 use App\Models\Teacher;
@@ -32,7 +33,23 @@ class ApplicationService extends Service
     {
         try{
             $application=Teacher::find($id);
+            if(!$application) return $this->responseError('No application with associate with id ');
             return $this->responseSuccess('Specific application',['data'=>$application]);
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function approveApplication($id): array
+    {
+        try{
+            $application=Teacher::find($id);
+            if(!$application)
+                return $this->responseError('No application with associate with id ');
+            $application->update(['isApproved'=>true]);
+            $sendEmailJob = new ApplicationEmails($application->email, $application->name,);
+            dispatch($sendEmailJob);
+            return $this->responseSuccess('Teacher approved successfully');
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());

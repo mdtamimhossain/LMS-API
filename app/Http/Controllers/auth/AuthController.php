@@ -29,12 +29,6 @@ class AuthController extends Controller
         return response()->json($this->service->processLogin($request->all()));
 
     }
-    public function teacherLogin (LoginRequest $request): JsonResponse
-    {
-
-        return response()->json($this->service->teacherLogin($request->all()));
-
-    }
 
     /**
      * @param RegistrationRequest $request

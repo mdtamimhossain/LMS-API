@@ -10,24 +10,24 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmails implements ShouldQueue
+class ApplicationEmails implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $email;
     private $name;
-    private $code;
+
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $email, string $name, string $code)
+    public function __construct(string $email, string $name)
     {
         $this->email = $email;
         $this->name = $name;
-        $this->code = $code;
+
     }
 
     /**
@@ -39,7 +39,7 @@ class SendEmails implements ShouldQueue
     $email = $this->email;
     $name = $this->name;
     $subject = 'Verification Code';
-    $content = "Hello $name, your verification code is:  $this->code . If your are applied for Teacher We will check your document and will mail you further information";
+    $content = "Congratulations  $name.\nWe have reviewd your application and now you become a member of our teaching panel.\nYou can now login as a Teacher" ;
 
     Mail::raw($content, function ($message) use ($email, $name, $subject) {
         $message->from('lms@gmail.com', 'lms');

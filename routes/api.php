@@ -15,15 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::get('/test', function () {
-    return response()->json([
-        'success' => true,
-        'message' => "Success"
-    ]);
-});
 
 Route::prefix('/v1/user')->group(function (){
     Route::post('/register', [AuthController::class, 'register']);
@@ -33,8 +24,8 @@ Route::prefix('/v1/user')->group(function (){
 });
 Route::prefix('/v1/teacher')->group(function (){
     Route::post('/register', [AuthController::class, 'teacherRegister']);
-    Route::POST('/login', [AuthController::class, 'teacherLogin']);
-    Route::POST('/verification', [AuthController::class, 'teacherVerification']);
+    Route::POST('/login', [AuthController::class, 'login']);
+    Route::POST('/verification', [AuthController::class, 'verification']);
     Route::get('/logout', [AuthController::class, 'teacherLogout']);
 });
 

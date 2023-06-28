@@ -3,11 +3,9 @@
 use App\Http\Controllers\teacher\teacherController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('/v1/teacher')->group(function (){
-    Route::post('/apply', [teacherController::class, 'apply']);
-    Route::post('/addCourse', [teacherController::class, 'addCourse']);
-});
 //if the user is teacher
-Route::prefix('/v1/teacher')->group(function (){
+
+Route::middleware(['auth:api'])->prefix('/v1/teacher')->group(function (){
     Route::post('/add-course', [teacherController::class, 'addCourse']);
+    Route::post('/add-video', [teacherController::class, 'addVideo']);
 });

@@ -5,14 +5,15 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\CourseController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('/v1')->group(function (){
+Route::prefix('/v1/admin')->group(function (){
     Route::post('/addCategory', [CategoryController::class, 'addCategory']);
     Route::get('/allCategory', [CategoryController::class, 'allCategory']);
-    Route::get('/editCategory/{id}', [CategoryController::class, 'editCategory']);
+    Route::get('/getCategory/{id}', [CategoryController::class, 'getCategory']);
     Route::post('/updateCategory', [CategoryController::class, 'updateCategory']);
     Route::post('/deleteCategory/{id}', [CategoryController::class, 'deleteCategory']);
     Route::get('/getApplications', [ApplicationController::class, 'getApplications']);
     Route::get('/getApplication/{id}', [ApplicationController::class, 'getApplication']);
+    Route::post('/approve/{id}', [ApplicationController::class, 'approveApplication']);
     Route::get('/getCourses', [CourseController::class, 'getCourses']);
     Route::get('/getCourse/{id}', [CourseController::class, 'getCourse']);
 });

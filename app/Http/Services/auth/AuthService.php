@@ -37,42 +37,19 @@ class AuthService extends Service
             return $this->responseError($exception->getMessage());
         }
     }
-    public function teacherLogin (array $data): array
-    {
-        try {
-            $user = Teacher::where('email', $data['email'])->first();
 
-            if (!$user) {
-
-                return $this->responseError('Email Not Found');
-            }
-            if (!Hash::check($data['password'], $user->password)) {
-                return $this->responseError("Wrong Email Or Password");
-            }
-            $authorization=[
-                'token' =>  $user->createToken($user->email)->accessToken,
-                'token_type' =>  'Bearer'
-            ];
-            return $this->responseSuccess("Login Successful!",['authorization'=>$authorization]);
-        }
-        catch (\Exception $exception) {
-            return $this->responseError($exception->getMessage());
-        }
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
     public function processRegistration (array $data): array
     {
         try {
+            $imagePath = $data['photo']->store('public/student_photo');
             $code = randomNumber(4);
             $formattedData = [
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'number' => $data['number'],
                 'verification_code' => $code,
                 'password' => Hash::make($data['password']),
+                'photo'=>$imagePath,
             ];
             $user = User::create($formattedData);
             $sendEmailJob = new SendEmails($user->email, $user->name, $code);
@@ -93,23 +70,27 @@ class AuthService extends Service
             $videoPath = $data['video_resume']->store('public/videos');
             $cvPath = $data['cv']->store('public/cv');
 
-
             $formattedData =[
                 'name'=>$data['name'],
                 'email'=>$data['email'],
-                'number'=>$data['number'],
                 'degree'=>$data['degree'],
                 'university'=>$data['university'],
                 'video_resume'=>$videoPath,
-                'photo'=>$imagePath,
                 'cv'=>$cvPath,
+            ];
+            $formattedData2 =[
+                'name'=>$data['name'],
+                'email'=>$data['email'],
+                'number'=>$data['number'],
+                'photo'=>$imagePath,
                 'verification_code'=>$code,
                 'password' => Hash::make($data['password']),
             ];
-            $user=Teacher::create($formattedData);
+            Teacher::create($formattedData);
+            $user=User::create($formattedData2);
             $sendEmailJob = new SendEmails($data['email'],$data['name'],$user->verification_code);
             dispatch($sendEmailJob);
-            return $this->responseSuccess("Registration Successful! Please check email for code");
+            return $this->responseSuccess("Registration Successful! Please check email for code.");
         }
         catch (\Exception $exception) {
             return $this->responseError($exception->getMessage());

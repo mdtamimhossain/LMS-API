@@ -28,6 +28,7 @@ class courseRequest extends FormRequest
             'category_id' => 'required',
             'user_id' => 'required',
             'description' => 'required',
+            'thumbnail' => 'required|image|max:2048',
         ];
     }
 }

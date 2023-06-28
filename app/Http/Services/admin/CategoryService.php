@@ -45,7 +45,7 @@ class CategoryService extends Service
             return $this->responseError($exception->getMessage());
         }
     }
-    public function editCategory($id): array
+    public function getCategory($id): array
     {
         try{
             $data=Category::find($id);

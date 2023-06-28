@@ -37,10 +37,10 @@ class CategoryController extends Controller
         return response()->json($this->service->allCategory());
 
     }
-   public function editCategory ($id): JsonResponse
+   public function getCategory ($id): JsonResponse
     {
 
-        return response()->json($this->service->editCategory($id));
+        return response()->json($this->service->getCategory($id));
 
     }
     public function updateCategory (editCategoryRequest $request): JsonResponse
