@@ -36,4 +36,10 @@ class CourseController extends Controller
         return response()->json($this->service->getCourse($id));
 
     }
+    public function deleteCourse($id): JsonResponse
+    {
+
+        return response()->json($this->service->deleteCourse($id));
+
+    }
 }

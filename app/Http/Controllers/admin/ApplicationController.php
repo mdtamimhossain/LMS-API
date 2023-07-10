@@ -34,10 +34,22 @@ class ApplicationController extends Controller
 
         return response()->json($this->service->getApplication($id));
 
-    }   public function approveApplication($id): JsonResponse
+    }
+    public function approveApplication($id): JsonResponse
     {
 
         return response()->json($this->service->approveApplication($id));
+
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function rejectApplication($id): JsonResponse
+    {
+
+        return response()->json($this->service->rejectApplication($id));
 
     }
 }

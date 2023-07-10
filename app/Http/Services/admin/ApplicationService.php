@@ -47,7 +47,24 @@ class ApplicationService extends Service
             if(!$application)
                 return $this->responseError('No application with associate with id ');
             $application->update(['isApproved'=>true]);
-            $sendEmailJob = new ApplicationEmails($application->email, $application->name,);
+            $content = "Congratulations  $application->name.\nWe have reviewed your application and now you become a member of our teaching panel.\nYou can now login as a Teacher" ;
+
+            $sendEmailJob = new ApplicationEmails($application->email, $application->name,$content);
+            dispatch($sendEmailJob);
+            return $this->responseSuccess('Teacher approved successfully');
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function rejectApplication($id): array
+    {
+        try{
+            $application=Teacher::find($id);
+            if(!$application)
+                return $this->responseError('No application with associate with id ');
+            $content=$application->name."We have already reviewed your application.We can't accept your application.\nBut you can apply again with more details requirement";
+            $sendEmailJob = new ApplicationEmails($application->email, $application->name,$content);
             dispatch($sendEmailJob);
             return $this->responseSuccess('Teacher approved successfully');
         }catch (\Exception $exception)

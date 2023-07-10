@@ -14,6 +14,8 @@ Route::prefix('/v1/admin')->group(function (){
     Route::get('/getApplications', [ApplicationController::class, 'getApplications']);
     Route::get('/getApplication/{id}', [ApplicationController::class, 'getApplication']);
     Route::post('/approve/{id}', [ApplicationController::class, 'approveApplication']);
+    Route::post('/reject/{id}', [ApplicationController::class, 'rejectApplication']);
     Route::get('/getCourses', [CourseController::class, 'getCourses']);
     Route::get('/getCourse/{id}', [CourseController::class, 'getCourse']);
+    Route::post('/deleteCourse/{id}', [CourseController::class, 'deleteCourse']);
 });
