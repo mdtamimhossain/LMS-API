@@ -5,6 +5,7 @@ namespace App\Http\Services\teacher;
 use App\Http\Services\Service;
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\Post;
 use App\Models\Teacher;
 
 use App\Models\User;
@@ -60,6 +61,26 @@ class teacherService extends Service
                 'video'=>$videoPath
             ]);
             return $this->responseSuccess('edit Category page ',['data'=>$data]);
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function addPost(array $data): array
+    {
+        try{
+            $course=Course::where('user_id',Auth::id())->where('id',$data['course_id'])->get();
+
+            if(!$course){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $filePath = $data['file']->store(`public/"$course->name"/file`);
+            Post::create([
+                'course_id'=>$data['course_id'],
+                'caption'=>$data['caption'],
+                'file'=>$filePath
+            ]);
+            return $this->responseSuccess('post added successfully');
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());

@@ -4,6 +4,7 @@ namespace App\Http\Services\student;
 use App\Http\Services\Service;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 
 class studentService extends Service
@@ -47,17 +48,35 @@ class studentService extends Service
             return $this->responseError($exception->getMessage());
         }
     }
-    public function enrolledCourse(): array
+    public function enrolledCourse($id): array
     {
         try{
-                $course_ids=Enrollment::where('student_id',Auth::id())->where('cancel',false)->get();
-                $courses=[];
-            foreach($course_ids as $course_id)
-            {
-                $courses[]=Course::find($course_id['course_id']);
-            }
+                $course=Course::findOrFail($id);
+            return $this->responseSuccess('All enrolled courses',['data'=>$course]);
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function courseVideo($id): array
+    {
+        try{
+            $videos=Video::where('course_id',$id)->get();
+            if(!$videos)
+                return $this->responseError('No video available in these course');
+            return $this->responseSuccess('All enrolled courses',['data'=>$videos]);
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function cancelCourse($id): array
+    {
+        try{
 
-            return $this->responseSuccess('All enrolled courses',['data'=>$courses]);
+            if(!$videos)
+                return $this->responseError('No video available in these course');
+            return $this->responseSuccess('All enrolled courses',['data'=>$videos]);
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());

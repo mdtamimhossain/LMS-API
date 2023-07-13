@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:api','teacher'])->prefix('/v1/teacher')->group(function (){
     Route::post('/add-course', [teacherController::class, 'addCourse']);
     Route::post('/add-course', [teacherController::class, 'addCourse']);
-    Route::post('/add-video', [teacherController::class, 'addVideo']);
+    Route::post('/add-post', [teacherController::class, 'addPost']);
     Route::post('/getCourses', [teacherController::class, 'getCourses']);
     Route::post('/getCourse', [teacherController::class, 'getCourse']);
     Route::post('/updateCourseName', [teacherController::class, 'updateCourseName']);

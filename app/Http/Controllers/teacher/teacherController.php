@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\teacher;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\teacher\courseRequest;
+use App\Http\Requests\teacher\postRequest;
 use App\Http\Requests\teacher\updateCourseDescriptionRequest;
 use App\Http\Requests\teacher\updateCourseNameRequest;
 use App\Http\Requests\teacher\updateCourseThumbnailRequest;
@@ -33,6 +34,12 @@ class teacherController extends Controller
     {
 
         return response()->json($this->service->addVideo($request->all()));
+
+    }
+    public function addPost(postRequest $request): JsonResponse
+    {
+
+        return response()->json($this->service->addPost($request->all()));
 
     }
     public function getCourses (): JsonResponse
