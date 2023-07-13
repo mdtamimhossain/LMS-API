@@ -6,10 +6,10 @@ use App\Http\Services\Service;
 use App\Jobs\SendEmails;
 use App\Models\Teacher;
 use App\Models\User;
+use function App\Helpers\randomNumber;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-
 class AuthService extends Service
 {
     /**
@@ -64,7 +64,9 @@ class AuthService extends Service
     public function teacherRegistration (array $data): array
     {
         try {
-
+            $user=User::where('email',$data['email'])->get();
+            if($user)
+                return $this->responseError("user with same email already exists");
             $code = randomNumber(4);
             $imagePath = $data['photo']->store('public/teacher_photo');
             $videoPath = $data['video_resume']->store('public/videos');

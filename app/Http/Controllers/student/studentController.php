@@ -19,10 +19,16 @@ class studentController extends Controller
      * @param courseRequest $request
      * @return JsonResponse
      */
-    public function courseEnroll (courseEnrollRequest $request): JsonResponse
+    public function courseEnroll ($id): JsonResponse
     {
 
-        return response()->json($this->service->courseEnroll($request->all()));
+        return response()->json($this->service->courseEnroll($id));
+
+    }
+    public function enrolledCourses(): JsonResponse
+    {
+
+        return response()->json($this->service->enrolledCourses());
 
     }
 

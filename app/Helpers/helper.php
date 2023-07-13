@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Helpers;
 /**
  * @param $length
  * @return string

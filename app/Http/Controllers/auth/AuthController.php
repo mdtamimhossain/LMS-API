@@ -9,7 +9,7 @@ use App\Http\Requests\Auth\VerificationRequest;
 use App\Http\Requests\Auth\TeacherRegistrationRequest;
 use App\Http\Services\auth\AuthService;
 use Illuminate\Http\JsonResponse;
-use function App\Http\Controllers\randomNumber;
+use function App\Helpers\randomNumber;
 
 class AuthController extends Controller
 {
