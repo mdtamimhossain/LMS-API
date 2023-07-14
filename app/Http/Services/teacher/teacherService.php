@@ -66,26 +66,7 @@ class teacherService extends Service
             return $this->responseError($exception->getMessage());
         }
     }
-    public function addPost(array $data): array
-    {
-        try{
-            $course=Course::where('user_id',Auth::id())->where('id',$data['course_id'])->get();
 
-            if(!$course){
-                return $this->responseError('you are not authorized to perform this action');
-            }
-            $filePath = $data['file']->store(`public/"$course->name"/file`);
-            Post::create([
-                'course_id'=>$data['course_id'],
-                'caption'=>$data['caption'],
-                'file'=>$filePath
-            ]);
-            return $this->responseSuccess('post added successfully');
-        }catch (\Exception $exception)
-        {
-            return $this->responseError($exception->getMessage());
-        }
-    }
 
     /**
      * @return array
@@ -136,7 +117,8 @@ class teacherService extends Service
             {
                 return $this->responseError("No Course found with the id given");
             }
-            $course->update(['course_name'=>$data['course_name']]);
+            $course->course_name=$data['course_name'];
+            $course->save();
             return $this->responseSuccess('Course Name updated successfully');
         }catch (\Exception $exception)
         {
@@ -156,7 +138,8 @@ class teacherService extends Service
             {
                 return $this->responseError("No Course found with the id given");
             }
-            $course->update(['description'=>$data['description']]);
+            $course->description=$data['description'];
+            $course->save();
             return $this->responseSuccess('Course Description updated successfully');
         }catch (\Exception $exception)
         {
@@ -177,11 +160,65 @@ class teacherService extends Service
                 return $this->responseError("No Course found with the id given");
             }
             $imagePath = $data['thumbnail']->store('public/thumbnail');
-            $course->update(['thumbnail'=>$imagePath]);
+            $course->thumbnail=$imagePath;
+            $course->save();
             return $this->responseSuccess('Course Thumbnail updated successfully');
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());
         }
     }
+    public function addPost(array $data): array
+    {
+        try{
+            $course=Course::where('user_id',Auth::id())->findOrFail($data['course_id']);
+
+            if(!$course){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $filePath = $data['file']->store(`public/"$course->course_name"/file`);
+
+            Post::create([
+                'course_id'=>$data['course_id'],
+                'user_id'=>Auth::id(),
+                'caption'=>$data['caption'],
+                'file'=>$filePath
+            ]);
+            return $this->responseSuccess('post added successfully');
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function getPosts($id): array
+    {
+        try{
+            $course=Course::where('user_id',Auth::id())->findOrFail($id);
+
+            if(!$course){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+
+            $posts=Post::where('course_id',$id)->get();
+            return $this->responseSuccess('post added successfully',['data'=>$posts]);
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function deletePost($id): array
+    {
+        try{
+            $post=Post::where('user_id',Auth::id())->findOrFail($id);
+            if(!$post){
+                return $this->responseError(`you are not authorized or post doesn't exist` );
+            }
+            $post->delete();
+            return $this->responseSuccess('post deleted successfully');
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+
 }

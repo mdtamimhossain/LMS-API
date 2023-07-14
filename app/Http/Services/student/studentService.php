@@ -4,6 +4,7 @@ namespace App\Http\Services\student;
 use App\Http\Services\Service;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\Post;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 
@@ -73,10 +74,29 @@ class studentService extends Service
     public function cancelCourse($id): array
     {
         try{
+            $enrollment=Enrollment::where('student_id',Auth::id())->where('cancel',false)->findOrFail($id);
+            if(!$enrollment){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $enrollment->cancel = true;
+            $enrollment->save();
+            return $this->responseSuccess('Leave from course successfully');
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function getPosts($id): array
+    {
+        try{
+            $enrollment=Enrollment::where('student_id',Auth::id())->findOrFail($id);
 
-            if(!$videos)
-                return $this->responseError('No video available in these course');
-            return $this->responseSuccess('All enrolled courses',['data'=>$videos]);
+
+            if(!$enrollment){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $posts=Post::where('course_id',$id)->get();
+            return $this->responseSuccess('all post',['data'=>$posts]);
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());

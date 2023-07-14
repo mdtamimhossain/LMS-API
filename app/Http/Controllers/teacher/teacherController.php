@@ -72,5 +72,17 @@ class teacherController extends Controller
         return response()->json($this->service->updateCourseDescription($request->all()));
 
     }
+    public function getPosts($id): JsonResponse
+    {
+
+        return response()->json($this->service->getPosts($id));
+
+    }
+    public function deletePost($id): JsonResponse
+    {
+
+        return response()->json($this->service->deletePost($id));
+
+    }
 
 }

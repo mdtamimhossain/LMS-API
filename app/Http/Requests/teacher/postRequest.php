@@ -25,7 +25,7 @@ class postRequest extends FormRequest
     {
         return [
             'course_id' => 'required',
-            'file' => 'file|mimetypes:application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,video/mp4',
+            'file' => 'file|mimetypes:application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,video/mp4,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         ];
     }
 }

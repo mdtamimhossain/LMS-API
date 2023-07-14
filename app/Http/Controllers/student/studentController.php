@@ -51,5 +51,10 @@ class studentController extends Controller
         return response()->json($this->service->cancelCourse($id));
     }
 
+    public function getPosts($id): JsonResponse
+    {
 
+        return response()->json($this->service->getPosts($id));
+
+    }
 }
