@@ -16,5 +16,8 @@ Route::middleware(['auth:api','teacher'])->prefix('/v1/teacher')->group(function
     Route::post('/add-post', [teacherController::class, 'addPost']);
     Route::get('/course-posts/{id}', [teacherController::class, 'getPosts']);
     Route::post('/delete-post/{id}', [teacherController::class, 'deletePost']);
+    Route::post('/post/comment', [teacherController::class, 'comment']);
+    Route::get('/post/all-comment/{id}', [teacherController::class, 'allComment']);
+    Route::post('/post/delete-comment/{id}', [teacherController::class, 'deleteComment']);
 });
 

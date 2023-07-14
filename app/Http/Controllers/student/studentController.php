@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\student;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\student\courseEnrollRequest;
+use App\Http\Requests\student\postCommentRequest;
 use App\Http\Requests\teacher\courseRequest;
 use App\Http\Services\student\studentService;
 use Illuminate\Http\JsonResponse;
@@ -57,4 +58,23 @@ class studentController extends Controller
         return response()->json($this->service->getPosts($id));
 
     }
+    public function comment(postCommentRequest $request): JsonResponse
+    {
+
+        return response()->json($this->service->comment($request->all()));
+
+    }
+    public function allComment($id): JsonResponse
+    {
+
+        return response()->json($this->service->allComment($id));
+
+    }
+    public function deleteComment($id): JsonResponse
+    {
+
+        return response()->json($this->service->deleteComment($id));
+
+    }
+
 }

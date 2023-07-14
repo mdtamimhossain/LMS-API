@@ -5,7 +5,9 @@ namespace App\Http\Services\teacher;
 use App\Http\Services\Service;
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\enrollment;
 use App\Models\Post;
+use App\Models\PostComment;
 use App\Models\Teacher;
 
 use App\Models\User;
@@ -215,6 +217,54 @@ class teacherService extends Service
             }
             $post->delete();
             return $this->responseSuccess('post deleted successfully');
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function comment(array $data): array
+    {
+        try{
+
+            $post=Post::where('user_id',Auth::id())->findOrFail($data['post_id']);
+
+            if(!$post){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            PostComment::create([
+                'post_id'=>$data['post_id'],
+                'user_id'=>Auth::id(),
+                'content'=>$data['content']
+            ]);
+            return $this->responseSuccess('comment successfully');
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function allComment($id): array
+    {
+        try{
+            $post=Post::where('user_id',Auth::id())->findOrFail($id);
+            if(!$post){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $comments=PostComment::where('post_id',$id)->get();
+            return $this->responseSuccess('all comment',['data'=>$comments]);
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function deleteComment($id): array
+    {
+        try{
+            $comment=PostComment::where('user_id',Auth::id())->findOrFail($id);
+            if(!$comment){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $comment->delete();
+            return $this->responseSuccess('comment deleted successfully');
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());

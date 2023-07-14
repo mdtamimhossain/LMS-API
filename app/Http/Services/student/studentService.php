@@ -5,6 +5,7 @@ use App\Http\Services\Service;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Post;
+use App\Models\PostComment;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 
@@ -97,6 +98,56 @@ class studentService extends Service
             }
             $posts=Post::where('course_id',$id)->get();
             return $this->responseSuccess('all post',['data'=>$posts]);
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function comment(array $data): array
+    {
+        try{
+            $post=Post::findOrFail($data['post_id']);
+            $enrollment=Enrollment::where('student_id',Auth::id())->findOrFail($post->course_id);
+
+            if(!$enrollment){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            PostComment::create([
+                'post_id'=>$data['post_id'],
+                'user_id'=>Auth::id(),
+                'content'=>$data['content']
+            ]);
+            return $this->responseSuccess('comment successfully');
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function allComment($id): array
+    {
+        try{
+            $post=Post::findOrFail($id);
+            $enrollment=Enrollment::where('student_id',Auth::id())->findOrFail($post->course_id);
+
+            if(!$enrollment){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $comments=PostComment::where('post_id',$id)->get();
+            return $this->responseSuccess('all comment',['data'=>$comments]);
+        }catch (\Exception $exception)
+        {
+            return $this->responseError($exception->getMessage());
+        }
+    }
+    public function deleteComment($id): array
+    {
+        try{
+            $comment=PostComment::where('user_id',Auth::id())->findOrFail($id);
+            if(!$comment){
+                return $this->responseError('you are not authorized to perform this action');
+            }
+            $comment->delete();
+            return $this->responseSuccess('comment deleted successfully');
         }catch (\Exception $exception)
         {
             return $this->responseError($exception->getMessage());
